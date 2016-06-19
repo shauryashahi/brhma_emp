@@ -1,4 +1,5 @@
 Rails.application.routes.draw do
+  default_url_options :host => "localhost:3000"
   resources :employers
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
@@ -29,6 +30,9 @@ Rails.application.routes.draw do
   resources :employers do
     member do
       get :confirm_email
+      get :send_otp
+      get :phone_verification
+      post :verify_otp
     end
   end
 

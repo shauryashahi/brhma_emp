@@ -11,6 +11,7 @@
       <th>Gender</th>
       <th>Location</th>
       <th>Phone number</th>
+      <th>State</th>
       <th colspan="3"></th>
     </tr>
   </thead>
@@ -24,6 +25,7 @@
         <td><%= employer.gender %></td>
         <td><%= employer.location %></td>
         <td><%= employer.phone_number %></td>
+        <td><%= employer.state %></td>
         <td><%= link_to 'Show', employer %></td>
         <td><%= link_to 'Edit', edit_employer_path(employer) %></td>
         <td><%= link_to 'Destroy', employer, method: :delete, data: { confirm: 'Are you sure?' } %></td>

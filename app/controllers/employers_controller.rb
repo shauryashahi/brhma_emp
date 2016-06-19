@@ -1,5 +1,5 @@
 class EmployersController < ApplicationController
-  before_action :set_employer, only: [:show, :edit, :update, :destroy]
+  before_action :set_employer, only: [:show, :edit, :update, :destroy, :send_otp, :verify_otp, :phone_verification]
 
   # GET /employers
   # GET /employers.json
@@ -21,6 +21,9 @@ class EmployersController < ApplicationController
   def edit
   end
 
+  def phone_verification
+  end
+
   # POST /employers
   # POST /employers.json
   def create
@@ -28,8 +31,9 @@ class EmployersController < ApplicationController
 
     respond_to do |format|
       if @employer.save
-        EmployerMailer.registration_confirmation(@employer).deliver_now
-        format.html { redirect_to @employer, notice: 'Employer was successfully created. Please confirm your email address to continue' }
+        @employer.send_verification_mail
+        @employer.send_otp
+        format.html { redirect_to phone_verification_employer_path(@employer), notice: 'Employer was successfully created. Please confirm your email address to continue' }
         format.json { render :show, status: :created, location: @employer }
       else
         format.html { render :new }
@@ -53,14 +57,40 @@ class EmployersController < ApplicationController
   end
   
   def confirm_email
-    employer = Employer.find_by_confirm_token(params[:id])
-    if employer
-      employer.email_activate
-      format.html { redirect_to @employer, notice: 'Email Verified.' }
-      format.json { render :show, status: :ok, location: @employer }
-    else
-      flash[:error] = "Sorry. Employer does not exist"
-      redirect_to root_url
+    respond_to do |format|
+      employer = Employer.find_by_confirm_token(params[:id])
+      if employer
+        employer.email_activate
+        format.html { redirect_to employer, notice: 'Email Verified.' }
+        format.json { render :show, status: :ok, location: employer }
+      else
+        format.html { redirect_to root_url }
+        format.json { render json: employer.errors, status: 400 }
+      end
+    end
+  end
+
+  def send_otp
+    respond_to do |format|
+      if @employer.send_otp
+        format.html { redirect_to @employer, notice: 'OTP Sent.' }
+        format.json { render :show, status: :ok, location: @employer }
+      else
+        format.html { redirect_to root_url }
+        format.json { render json: employer.errors, status: 400 }
+      end
+    end
+  end
+
+  def verify_otp
+    respond_to do |format|
+      if @employer.verify_otp(params[:otp])
+        format.html { redirect_to @employer, notice: 'Phone Verified.' }
+        format.json { render :show, status: :ok, location: @employer }
+      else
+        format.html { redirect_to phone_verification_employer_path(@employer), notice: 'Verification Code NOT Valid' }
+        format.json { render json: @employer.errors, status: 400 }
+      end
     end
   end
 
