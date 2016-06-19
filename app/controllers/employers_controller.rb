@@ -28,7 +28,8 @@ class EmployersController < ApplicationController
 
     respond_to do |format|
       if @employer.save
-        format.html { redirect_to @employer, notice: 'Employer was successfully created.' }
+        EmployerMailer.registration_confirmation(@employer).deliver
+        format.html { redirect_to @employer, notice: 'Employer was successfully created. Please confirm your email address to continue' }
         format.json { render :show, status: :created, location: @employer }
       else
         format.html { render :new }
@@ -48,6 +49,18 @@ class EmployersController < ApplicationController
         format.html { render :edit }
         format.json { render json: @employer.errors, status: :unprocessable_entity }
       end
+    end
+  end
+  
+  def confirm_email
+    employer = Employer.find_by_confirm_token(params[:id])
+    if employer
+      employer.email_activate
+      format.html { redirect_to @employer, notice: 'Email Verified.' }
+      format.json { render :show, status: :ok, location: @employer }
+    else
+      flash[:error] = "Sorry. Employer does not exist"
+      redirect_to root_url
     end
   end
 

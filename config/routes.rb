@@ -26,6 +26,11 @@ Rails.application.routes.draw do
   #       get 'sold'
   #     end
   #   end
+  resources :employers do
+    member do
+      get :confirm_email
+    end
+  end
 
   # Example resource route with sub-resources:
   #   resources :products do
