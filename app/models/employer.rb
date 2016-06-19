@@ -57,31 +57,31 @@ class Employer < ActiveRecord::Base
 
   def check_for_email_and_phone_changes
     if self.email_changed? && self.phone_number_changed?
+      self.reload
       self.resend_verf_email
       self.resend_otp
     elsif self.email_changed?
+      self.reload
       self.resend_verf_email
     elsif self.phone_number_changed?
+      self.reload
       self.resend_otp
     end
-    self.unverified!
   end
   
   def resend_verf_email
-    self.reload
     self.email_confirmed = false
     self.confirm_token = nil
     self.generate_confirmation_token
-    self.save
+    self.unverified!
     self.send_verification_mail
   end
 
   def resend_otp
-    self.reload
     self.phone_confirmed = false
     self.phone_verf_token = nil
     self.generate_otp
-    self.save
+    self.unverified!
     self.send_otp
   end
 
