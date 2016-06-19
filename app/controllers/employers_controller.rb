@@ -1,5 +1,5 @@
 class EmployersController < ApplicationController
-  before_action :set_employer, only: [:show, :edit, :update, :destroy, :send_otp, :verify_otp, :phone_verification]
+  before_action :set_employer, only: [:show, :edit, :update, :destroy, :send_otp, :verify_otp, :phone_verification, :send_email]
 
   # GET /employers
   # GET /employers.json
@@ -22,6 +22,14 @@ class EmployersController < ApplicationController
   end
 
   def phone_verification
+  end
+
+  def send_email
+    @employer.send_verification_mail
+    respond_to do |format|
+      format.html { redirect_to @employer, notice: 'Please Check your email.' }
+      format.json { render :show, status: :ok, location: @employer}
+    end
   end
 
   # POST /employers
@@ -77,7 +85,7 @@ class EmployersController < ApplicationController
         format.json { render :show, status: :ok, location: @employer }
       else
         format.html { redirect_to root_url }
-        format.json { render json: employer.errors, status: 400 }
+        format.json { render json: @employer.errors, status: 400 }
       end
     end
   end
