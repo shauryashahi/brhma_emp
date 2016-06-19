@@ -28,7 +28,7 @@ class EmployersController < ApplicationController
 
     respond_to do |format|
       if @employer.save
-        EmployerMailer.registration_confirmation(@employer).deliver
+        EmployerMailer.registration_confirmation(@employer).deliver_now
         format.html { redirect_to @employer, notice: 'Employer was successfully created. Please confirm your email address to continue' }
         format.json { render :show, status: :created, location: @employer }
       else
