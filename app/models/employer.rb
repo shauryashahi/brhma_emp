@@ -71,6 +71,7 @@ class Employer < ActiveRecord::Base
     self.email_confirmed = false
     self.confirm_token = nil
     self.generate_confirmation_token
+    self.save
     self.send_verification_mail
   end
 
@@ -79,6 +80,7 @@ class Employer < ActiveRecord::Base
     self.phone_confirmed = false
     self.phone_verf_token = nil
     self.generate_otp
+    self.save
     self.send_otp
   end
 
