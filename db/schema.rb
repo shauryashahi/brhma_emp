@@ -11,6 +11,18 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 0) do
+ActiveRecord::Schema.define(version: 20160619051425) do
+
+  create_table "employers", force: :cascade do |t|
+    t.string   "name"
+    t.string   "email"
+    t.date     "date_of_birth"
+    t.string   "gender"
+    t.integer  "state",         default: 0
+    t.string   "location"
+    t.string   "phone_number"
+    t.datetime "created_at",                null: false
+    t.datetime "updated_at",                null: false
+  end
 
 end
