@@ -1,0 +1,9 @@
+<p id="notice"><%= notice %></p>
+
+<h3>Enter your Phone Verification Code</h3>
+<%= form_tag({controller: "employers", action: "verify_otp"}, method: "post") do %>
+  <%= text_field_tag :otp %>
+  <%= submit_tag "Verify OTP", class: "btn btn-primary" %>
+<% end %>
+<%= link_to 'Show', @employer %> |
+<%= link_to 'Back', employers_path %>

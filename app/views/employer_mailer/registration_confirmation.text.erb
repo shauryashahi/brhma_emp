@@ -1,0 +1,5 @@
+Hi <%= @employer.name %>,
+
+Thanks for registering! To confirm your registration click the URL below.
+
+<%= confirm_email_employer_url(@employer.confirm_token) %>
