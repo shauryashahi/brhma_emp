@@ -1,5 +1,5 @@
 Rails.application.routes.draw do
-  default_url_options :host => "localhost:3000"
+  default_url_options :host => "https://ancient-falls-21822.herokuapp.com"
   resources :employers
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
