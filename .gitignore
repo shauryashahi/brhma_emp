@@ -15,3 +15,13 @@
 /log/*
 !/log/.keep
 /tmp
+/.byebug_history
+/.idea
+/.DS_store
+Gemfile.lock
+# Ignore public assets in production
+public/assets/
+
+# Ignore application configuration
+
+**/.DS_Store
