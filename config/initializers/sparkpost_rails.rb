@@ -1,3 +1,3 @@
 SparkPostRails.configure do |c|
-  c.api_key = 'a7fb982bba6083c6803ed03d93296b8819f4d25c'
+  c.api_key = 'cb7b2b1ac831fe38cd8f5d96a87da25c20c27ac3'
 end
