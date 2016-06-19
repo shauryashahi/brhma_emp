@@ -8,7 +8,7 @@ class Employer < ActiveRecord::Base
   validates :phone_number, :presence => true, :uniqueness => true
   validates_length_of :phone_number, :is => 10
   before_create :generate_confirmation_token, :generate_otp
-  after_update :check_for_email_and_phone_changes, :if => Proc.new {|k| k.email_changed? || k.phone_number_changed?}
+  after_update :check_for_email_and_phone_changes, :if => proc {|k| k.email_changed? || k.phone_number_changed?}
 
   def send_verification_mail
     EmployerMailer.registration_confirmation(self).deliver_now if self.confirm_token
@@ -18,7 +18,7 @@ class Employer < ActiveRecord::Base
     self.email_confirmed = true
     self.confirm_token = nil
     self.verified! if self.can_verify?
-    save
+    self.save
   end
 
   def send_otp
@@ -40,7 +40,7 @@ class Employer < ActiveRecord::Base
     self.phone_confirmed = true
     self.phone_verf_token = nil
     self.verified! if self.can_verify?
-    save
+    self.save
   end
 
   def can_verify?
@@ -57,31 +57,28 @@ class Employer < ActiveRecord::Base
 
   def check_for_email_and_phone_changes
     if self.email_changed? && self.phone_number_changed?
-      self.reload
       self.resend_verf_email
       self.resend_otp
-    elsif self.email_changed?
-      self.reload
-      self.resend_verf_email
-    elsif self.phone_number_changed?
-      self.reload
-      self.resend_otp
+    else
+      self.resend_verf_email if self.email_changed?
+      self.resend_otp if self.phone_number_changed?
     end
+    self.unverified!
   end
   
   def resend_verf_email
+    self.reload
     self.email_confirmed = false
     self.confirm_token = nil
     self.generate_confirmation_token
-    self.unverified!
     self.send_verification_mail
   end
 
   def resend_otp
+    self.reload
     self.phone_confirmed = false
     self.phone_verf_token = nil
     self.generate_otp
-    self.unverified!
     self.send_otp
   end
 
