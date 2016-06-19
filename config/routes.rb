@@ -29,7 +29,7 @@ Rails.application.routes.draw do
   #   end
   resources :employers do
     member do
-      get :send_email
+      get :resend_email
       get :confirm_email
       get :phone_verification
       post :verify_otp

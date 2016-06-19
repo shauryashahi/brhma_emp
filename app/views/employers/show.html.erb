@@ -33,7 +33,7 @@
   <strong>State:</strong>
   <%= @employer.state %>
 </p>
-<%= link_to 'Resend Confirmation Email', send_email_employer_path(@employer) unless @employer.email_confirmed%>
+<%= link_to 'Resend Confirmation Email', resend_email_employer_path(@employer) unless @employer.email_confirmed%>
 <%= link_to 'Verify Phone', phone_verification_employer_path(@employer) unless @employer.phone_confirmed%>
 <%= link_to 'Edit', edit_employer_path(@employer) %> |
 <%= link_to 'Back', employers_path %>
