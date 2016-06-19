@@ -8,6 +8,7 @@ class Employer < ActiveRecord::Base
   validates :phone_number, :presence => true, :uniqueness => true
   validates_length_of :phone_number, :is => 10
   before_create :generate_confirmation_token, :generate_otp
+  after_update :check_for_email_and_phone_changes, :if => Proc.new {|k| k.email_changed? || k.phone_number_changed?}
 
   def send_verification_mail
     EmployerMailer.registration_confirmation(self).deliver_now if self.confirm_token
@@ -46,13 +47,42 @@ class Employer < ActiveRecord::Base
     self.phone_confirmed && self.email_confirmed
   end
   
-  private
   def generate_confirmation_token
     self.confirm_token = SecureRandom.urlsafe_base64.to_s if self.confirm_token.blank?
   end
 
   def generate_otp
     self.phone_verf_token = "#{self.name[0..2].upcase}"+rand(1000..9999).to_s if self.phone_verf_token.blank?
+  end
+
+  def check_for_email_and_phone_changes
+    if self.email_changed? && self.phone_number_changed?
+      self.reload
+      self.resend_verf_email
+      self.resend_otp
+    elsif self.email_changed?
+      self.reload
+      self.resend_verf_email
+    elsif self.phone_number_changed?
+      self.reload
+      self.resend_otp
+    end
+  end
+  
+  def resend_verf_email
+    self.email_confirmed = false
+    self.confirm_token = nil
+    self.generate_confirmation_token
+    self.unverified!
+    self.send_verification_mail
+  end
+
+  def resend_otp
+    self.phone_confirmed = false
+    self.phone_verf_token = nil
+    self.generate_otp
+    self.unverified!
+    self.send_otp
   end
 
 end
