@@ -59,9 +59,10 @@ class Employer < ActiveRecord::Base
     if self.email_changed? && self.phone_number_changed?
       self.resend_verf_email
       self.resend_otp
-    else
-      self.resend_verf_email if self.email_changed?
-      self.resend_otp if self.phone_number_changed?
+    elsif self.email_changed?
+      self.resend_verf_email
+    elsif self.phone_number_changed?
+      self.resend_otp
     end
     self.unverified!
   end
