@@ -25,10 +25,14 @@ class EmployersController < ApplicationController
   end
 
   def resend_email
-    @employer.send_verification_mail
     respond_to do |format|
-      format.html { redirect_to @employer, notice: 'Please Check your email.' }
-      format.json { render :show, status: :ok, location: @employer}
+      if @employer.send_verification_mail
+        format.html { redirect_to @employer, notice: 'Please Check your email.' }
+        format.json { render :show, status: :ok, location: @employer}
+      else
+        format.html { redirect_to @employer, notice: 'Email couldnt be sent. Mail Servers not responding' }
+        format.json { render :show, status: :ok, location: @employer}
+      end
     end
   end
 
