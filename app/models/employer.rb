@@ -12,7 +12,7 @@ class Employer < ActiveRecord::Base
 
   def send_verification_mail
     begin
-      EmployerMailer.registration_confirmation(self).deliver_now if self.confirm_token
+      #EmployerMailer.registration_confirmation(self).deliver_now if self.confirm_token
     rescue Exception => e
       Rails.log.info "Could not send mail."
     end
