@@ -11,4 +11,4 @@ Clone it and run:
 
 - rails s
 
-## Demo at https://ancient-falls-21822.herokuapp.com
+## Demo at https://shrouded-plateau-92714.herokuapp.com
