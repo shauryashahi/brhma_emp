@@ -11,7 +11,7 @@ class Employer < ActiveRecord::Base
   after_update :check_for_email_and_phone_changes, :if => proc {|k| k.email_changed? || k.phone_number_changed?}
 
   def send_verification_mail
-    EmployerMailer.registration_confirmation(self).deliver_now if self.confirm_token
+    # EmployerMailer.registration_confirmation(self).deliver_now if self.confirm_token
   end
 
   def email_activate
@@ -22,14 +22,14 @@ class Employer < ActiveRecord::Base
   end
 
   def send_otp
-    if self.phone_verf_token
-      url = URI("http://message.dalmiainfo.com/vendorsms/pushsms.aspx?user=incityventures&password=incity554&msisdn=%20#{self.phone_number}&sid=ICVPVT&msg=Dear%20#{self.name}%2C%20your%20password%20is%20#{self.phone_verf_token}.&fl=0&gwid=2")
-      http = Net::HTTP.new(url.host, url.port)
-      request = Net::HTTP::Get.new(url)
-      request["content-type"] = 'application/json'
-      request["cache-control"] = 'no-cache'
-      response = http.request(request)
-    end
+    # if self.phone_verf_token
+    #   url = URI("http://message.dalmiainfo.com/vendorsms/pushsms.aspx?user=incityventures&password=incity554&msisdn=%20#{self.phone_number}&sid=ICVPVT&msg=Dear%20#{self.name}%2C%20your%20password%20is%20#{self.phone_verf_token}.&fl=0&gwid=2")
+    #   http = Net::HTTP.new(url.host, url.port)
+    #   request = Net::HTTP::Get.new(url)
+    #   request["content-type"] = 'application/json'
+    #   request["cache-control"] = 'no-cache'
+    #   response = http.request(request)
+    # end
   end
 
   def verify_otp otp
