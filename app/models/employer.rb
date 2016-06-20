@@ -8,6 +8,7 @@ class Employer < ActiveRecord::Base
   validates :phone_number, :presence => true, :uniqueness => true
   validates_length_of :phone_number, :is => 10
   before_create :generate_confirmation_token, :generate_otp
+  after_create :send_verification_mail, :send_otp
   after_update :check_for_email_and_phone_changes, :if => proc {|k| k.email_changed? || k.phone_number_changed?}
 
   def send_verification_mail
