@@ -39,8 +39,6 @@ class EmployersController < ApplicationController
 
     respond_to do |format|
       if @employer.save
-        @employer.send_verification_mail
-        @employer.send_otp
         format.html { redirect_to phone_verification_employer_path(@employer), notice: 'Employer was successfully created. Please confirm your email address to continue' }
         format.json { render :show, status: :created, location: @employer }
       else
